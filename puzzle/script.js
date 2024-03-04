@@ -27,6 +27,8 @@ const sentenses = [
   'The woman enjoys riding her bicycle',
 ];
 
+let zIndex = 0;
+
 function cut() {
   const pieces = [];
   for (let y = 0; y < rows; y++) {
@@ -41,6 +43,7 @@ function cut() {
     let passedWidth = 0; // ширина которая уже использована, для указания корректного значения в background-position
 
     const line = document.createElement('div');
+    line.style.height = `${blockHeight / rows}px`
     line.className = 'line';
     div.append(line);
 
@@ -58,11 +61,12 @@ function cut() {
       piece.className = 'piece';
       piece.textContent = sentense[x];
 
-      piece.style.height = `${blockHeight / rows}`;
+
+      piece.style.zIndex = zIndex++;
+      piece.style.height = `${blockHeight / rows}px`;
       piece.style.width = `${pieceWidth}px`;
       piece.style.backgroundImage = "url('./deerlake.jpg')";
       bulge.style.backgroundImage = "url('./deerlake.jpg')";
-
 
       const backSize = `${blockWidth}px ${blockHeight}px`;
       const backPos = `-${passedWidth}px ${
@@ -79,6 +83,7 @@ function cut() {
       passedWidth += pieceWidth;
 
       piece.draggable = true;
+
       piece.addEventListener('drag', () => {
         console.log('dragging');
       });
@@ -93,4 +98,63 @@ function cut() {
   return pieces;
 }
 
-cut();
+const puzzle = cut();
+
+const field = document.createElement('div');
+field.className = 'field';
+body.append(field);
+
+puzzle.forEach((elem, index) => {
+  if (index < 4) {
+    const container = document.createElement('div');
+    container.className = 'container';
+    field.append(container);
+    container.append(elem);
+  }
+});
+
+// const body = document.body;
+
+// const img = new Image();
+// img.src = './deerlake.jpg';
+
+// const imgWidth = img.width / 2;
+// const imgHeight = img.height / 2;
+
+// const rows = 10;
+// const cols = 4;
+
+// function createPiece() {
+//   const piece = document.createElement('canvas');
+//   const pieceContext = piece.getContext('2d');
+
+//   const pieceWidth = imgWidth / cols;
+//   const pieceHeight = imgHeight / rows;
+
+//   pieceContext.beginPath();
+//   pieceContext.moveTo(0, 0);
+//   pieceContext.lineTo(0, pieceWidth);
+//   pieceContext.lineTo()
+
+  
+
+//   piece.width = pieceWidth;
+//   piece.height = pieceHeight;
+
+//   img.onload = () =>
+//     pieceContext.drawImage(
+//       img,
+//       0,
+//       0,
+//       pieceWidth,
+//       pieceHeight,
+//       0,
+//       0,
+//       pieceWidth / 2,
+//       pieceHeight / 2
+//     );
+//   piece.draggable = true;
+//   body.append(piece);
+// }
+
+// createPiece();
