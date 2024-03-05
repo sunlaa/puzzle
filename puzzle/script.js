@@ -28,6 +28,7 @@ const sentenses = [
 ];
 
 let zIndex = 0;
+let pieceId = 0;
 
 function cut() {
   const pieces = [];
@@ -43,30 +44,33 @@ function cut() {
     let passedWidth = 0; // ширина которая уже использована, для указания корректного значения в background-position
 
     const line = document.createElement('div');
-    line.style.height = `${blockHeight / rows}px`
+    line.style.height = `${blockHeight / rows}px`;
     line.className = 'line';
     div.append(line);
 
     for (let x = 0; x < countOfPieces; x++) {
-      const fraction = (sentense[x].length * 16) / piecesWidthFitContent; // доля занимаемая кусочком в линии
+      const fraction = (sentense[x].length * 16) / piecesWidthFitContent; // доля занимаемая кусочком в линии, 16 - предполагаемая ширина одной буквы
       const pieceWidth = fraction * blockWidth; // конечная ширина кусочка
 
-      const bulge = document.createElement('div');
+      const bulge = document.createElement('div'); // выпуклость
       bulge.className = 'bulge';
 
-      const concavity = document.createElement('div');
+      const concavity = document.createElement('div'); // впуклость
       concavity.className = 'concavity';
 
       const piece = document.createElement('div');
       piece.className = 'piece';
       piece.textContent = sentense[x];
 
-
+      piece.id = pieceId++;
       piece.style.zIndex = zIndex++;
       piece.style.height = `${blockHeight / rows}px`;
       piece.style.width = `${pieceWidth}px`;
+
       piece.style.backgroundImage = "url('./deerlake.jpg')";
       bulge.style.backgroundImage = "url('./deerlake.jpg')";
+      // piece.style.backgroundImage = "url('./9th-wave.jpg')";
+      // bulge.style.backgroundImage = "url('./9th-wave.jpg')";
 
       const backSize = `${blockWidth}px ${blockHeight}px`;
       const backPos = `-${passedWidth}px ${
@@ -78,20 +82,30 @@ function cut() {
       piece.style.backgroundPosition = backPos;
 
       bulge.style.backgroundSize = backSize;
-      bulge.style.backgroundPosition = backPos;
+      bulge.style.backgroundPosition = `-${passedWidth - 10}px ${
+        // 10 - ширина выпуклости
+        (blockHeight / 10) * -y - 9
+      }px`;
 
       passedWidth += pieceWidth;
 
       piece.draggable = true;
 
-      piece.addEventListener('drag', () => {
-        console.log('dragging');
-      });
+      // piece.addEventListener('drag', () => {
+      //   console.log('dragging');
+      // });
 
       pieces.push(piece);
       line.append(piece);
-      piece.append(bulge);
-      piece.append(concavity);
+
+      if (x == 0) {
+        piece.append(concavity);
+      } else if (x == sentense.length - 1) {
+        piece.append(bulge);
+      } else if (x !== 0 && x !== sentense.length - 1) {
+        piece.append(concavity);
+        piece.append(bulge);
+      }
     }
   }
 
@@ -99,19 +113,55 @@ function cut() {
 }
 
 const puzzle = cut();
-
 const field = document.createElement('div');
 field.className = 'field';
 body.append(field);
 
-puzzle.forEach((elem, index) => {
-  if (index < 4) {
-    const container = document.createElement('div');
-    container.className = 'container';
-    field.append(container);
-    container.append(elem);
-  }
+puzzle.forEach((elem) => {
+  elem.addEventListener('dragstart', (e) => {
+    const puzzlePiece = e.target;
+
+    const puzzleId = puzzlePiece.id;
+    e.dataTransfer.setData('id', puzzleId);
+    setTimeout(() => (puzzlePiece.style.opacity = '0'), 0);
+  });
 });
+
+field.addEventListener('dragover', (e) => {
+  e.preventDefault();
+});
+
+field.addEventListener('dragenter', (e) => {
+  e.target.classList.add('hovered');
+});
+
+field.addEventListener('dragleave', (e) => {
+  e.target.classList.remove('hovered');
+});
+
+field.addEventListener('drop', (e) => {
+  e.preventDefault();
+  e.target.classList.remove('hovered');
+
+  const id = e.dataTransfer.getData('id');
+  const elem = document.getElementById(id);
+
+  const placeholder = elem.cloneNode(true);
+  placeholder.style.opacity = '0';
+  elem.parentNode.insertBefore(placeholder, elem);
+
+  elem.style.opacity = '1';
+  e.target.append(elem);
+});
+
+// puzzle.forEach((elem, index) => {
+//   if (index < 4) {
+//     const container = document.createElement('div');
+//     container.className = 'container';
+//     field.append(container);
+//     container.append(elem);
+//   }
+// });
 
 // const body = document.body;
 
@@ -135,8 +185,6 @@ puzzle.forEach((elem, index) => {
 //   pieceContext.moveTo(0, 0);
 //   pieceContext.lineTo(0, pieceWidth);
 //   pieceContext.lineTo()
-
-  
 
 //   piece.width = pieceWidth;
 //   piece.height = pieceHeight;

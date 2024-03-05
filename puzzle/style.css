@@ -1,9 +1,11 @@
 div {
   display: grid;
+  gap: 0.5px;
 }
 
 .line {
   display: flex;
+  gap: 0.5px;
 }
 
 .piece {
@@ -12,9 +14,9 @@ div {
   color: wheat;
   text-shadow: 1px 1px black;
   text-align: center;
-  border: solid 1px black;
-
-
+  /* border: solid 0.5px black; */
+  border-right: none;
+  border-left: none;
 }
 
 .bulge {
@@ -25,7 +27,8 @@ div {
   left: -10px;
   border-top-left-radius: 50%;
   border-bottom-left-radius: 50%;
-  border: solid 1px black;
+  /* border: solid 0.5px black; */
+  border-right: none;
 }
 
 .concavity {
@@ -37,9 +40,8 @@ div {
   border-top-left-radius: 50%;
   border-bottom-left-radius: 50%;
   background-color: rgb(255, 255, 255);
-  border: solid 1px black;
+  /* border: solid 0.5px black; */
   border-right: none;
-
 }
 
 .field {
@@ -48,11 +50,16 @@ div {
   justify-content: center;
   flex-wrap: wrap;
   margin: 10px;
-  width: auto;
-  height: auto;
+  width: 500px;
+  height: 100px;
   border: solid 1px black;
 }
 
+.field.hovered {
+  border: dashed 1px red;
+  background-color: rgba(147, 147, 249, 0.39);
+}
+/* 
 .field .container {
   display: flex;
   align-items: center;
@@ -60,4 +67,4 @@ div {
   width: auto;
   height: auto;
   margin: 10px;
-}
+} */
