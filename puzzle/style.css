@@ -5,49 +5,37 @@ div {
 
 .line {
   display: flex;
-  gap: 0.5px;
+  gap: 1px;
+}
+
+.container {
+  position: relative;
 }
 
 .piece {
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-sizing: border-box;
   color: wheat;
   text-shadow: 1px 1px black;
-  text-align: center;
-  /* border: solid 0.5px black; */
-  border-right: none;
-  border-left: none;
 }
 
 .bulge {
   position: absolute;
-  width: 10px;
-  height: 10px;
-  top: 8px;
-  left: -10px;
+  width: 14px;
+  height: 14px;
+  /* top: 14.5px; */
+  left: -7px;
   border-top-left-radius: 50%;
   border-bottom-left-radius: 50%;
-  /* border: solid 0.5px black; */
-  border-right: none;
-}
-
-.concavity {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  top: 8px;
-  right: 0;
-  border-top-left-radius: 50%;
-  border-bottom-left-radius: 50%;
-  background-color: rgb(255, 255, 255);
-  /* border: solid 0.5px black; */
-  border-right: none;
 }
 
 .field {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 2px;
   flex-wrap: wrap;
   margin: 10px;
   width: 500px;
@@ -59,12 +47,3 @@ div {
   border: dashed 1px red;
   background-color: rgba(147, 147, 249, 0.39);
 }
-/* 
-.field .container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: auto;
-  height: auto;
-  margin: 10px;
-} */

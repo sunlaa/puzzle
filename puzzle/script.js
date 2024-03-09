@@ -1,14 +1,10 @@
 const body = document.querySelector('body');
-const img = new Image();
-img.src = './deerlake.jpg';
-wholeWidth = img.width;
-wholeHeight = img.height;
 
 const div = document.createElement('div');
 body.append(div);
 
-const blockWidth = wholeWidth / 2;
-const blockHeight = wholeHeight / 2;
+const blockWidth = 1000;
+const blockHeight = 550;
 
 div.style.width = `${blockWidth}px`;
 div.style.height = `${blockHeight}px`;
@@ -52,25 +48,24 @@ function cut() {
       const fraction = (sentense[x].length * 16) / piecesWidthFitContent; // доля занимаемая кусочком в линии, 16 - предполагаемая ширина одной буквы
       const pieceWidth = fraction * blockWidth; // конечная ширина кусочка
 
+      const container = document.createElement('div');
+      container.className = 'container';
+
       const bulge = document.createElement('div'); // выпуклость
       bulge.className = 'bulge';
-
-      const concavity = document.createElement('div'); // впуклость
-      concavity.className = 'concavity';
+      bulge.style.top = `${blockHeight / rows / 2 - 7}px`; // высота кусочка разделить на 2 и отнять половину ширины выпуклости
 
       const piece = document.createElement('div');
       piece.className = 'piece';
       piece.textContent = sentense[x];
 
-      piece.id = pieceId++;
-      piece.style.zIndex = zIndex++;
+      container.id = pieceId++;
+      container.style.zIndex = zIndex++;
       piece.style.height = `${blockHeight / rows}px`;
       piece.style.width = `${pieceWidth}px`;
 
       piece.style.backgroundImage = "url('./deerlake.jpg')";
       bulge.style.backgroundImage = "url('./deerlake.jpg')";
-      // piece.style.backgroundImage = "url('./9th-wave.jpg')";
-      // bulge.style.backgroundImage = "url('./9th-wave.jpg')";
 
       const backSize = `${blockWidth}px ${blockHeight}px`;
       const backPos = `-${passedWidth}px ${
@@ -83,29 +78,36 @@ function cut() {
 
       bulge.style.backgroundSize = backSize;
       bulge.style.backgroundPosition = `-${passedWidth - 10}px ${
-        // 10 - ширина выпуклости
+        // 9 - ширина выпуклости
         (blockHeight / 10) * -y - 9
       }px`;
 
       passedWidth += pieceWidth;
 
-      piece.draggable = true;
+      container.draggable = true;
 
-      // piece.addEventListener('drag', () => {
-      //   console.log('dragging');
-      // });
-
-      pieces.push(piece);
-      line.append(piece);
-
-      if (x == 0) {
-        piece.append(concavity);
-      } else if (x == sentense.length - 1) {
-        piece.append(bulge);
-      } else if (x !== 0 && x !== sentense.length - 1) {
-        piece.append(concavity);
-        piece.append(bulge);
+      if (x === 0) {
+        piece.style.mask = `radial-gradient(
+          circle at ${pieceWidth}px 50%,
+          transparent 0,
+          transparent 7px,
+          black 7px
+        )`;
+      } else if (x === countOfPieces - 1) {
+        container.append(bulge);
+      } else {
+        piece.style.mask = `radial-gradient(
+          circle at ${pieceWidth}px 50%,
+          transparent 0,
+          transparent 7px,
+          black 7px
+        )`;
+        container.append(bulge);
       }
+
+      pieces.push(container);
+      container.append(piece);
+      line.append(container);
     }
   }
 
